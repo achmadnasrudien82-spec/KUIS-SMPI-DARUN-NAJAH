@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ulangan Harian BTQ - SMP Darun Najah</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            pink: '#FF6B9B',
+                            yellow: '#FFB800',
+                            blue: '#4D96FF',
+                            purple: '#9B51E0',
+                            green: '#6BCB77',
+                            bg: '#F3F8FF'
+                        }
+                    },
+                    fontFamily: {
+                        display: ['Fredoka', 'sans-serif'],
+                        body: ['Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #F3F8FF;
+            background-image: radial-gradient(#4D96FF 0.75px, transparent 0.75px), radial-gradient(#FF6B9B 0.75px, #F3F8FF 0.75px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+        }
+        .font-display { font-family: 'Fredoka', sans-serif; }
+        .bouncy { transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        .bouncy:hover { transform: translateY(-3px) scale(1.01); }
+        .bouncy:active { transform: translateY(1px) scale(0.99); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between text-slate-800 antialiased p-4 sm:p-6">
+
+    <!-- Header Navbar SMP Darun Najah -->
+    <header class="max-w-4xl mx-auto w-full mb-6">
+        <div class="bg-white/90 backdrop-blur-md rounded-3xl p-4 sm:p-5 shadow-xl border-4 border-white flex justify-between items-center">
+            <div class="flex items-center space-x-3 cursor-pointer select-none" onclick="handleSecretClick()" title="Klik 3x untuk Akses Guru">
+                <div id="schoolLogoContainer" class="bg-brand-yellow p-2 rounded-2xl text-white shadow-md w-12 h-12 flex items-center justify-center overflow-hidden">
+                    <i data-lucide="book-open-check" class="w-7 h-7 stroke-[2.5]"></i>
+                </div>
+                <div>
+                    <h1 class="font-display text-xl sm:text-2xl font-bold text-slate-800 tracking-wide">SMP DARUN NAJAH 🎈</h1>
+                    <p class="text-xs sm:text-sm font-semibold text-brand-blue">Ulangan Harian Mulok BTQ</p>
+                </div>
+            </div>
+            <span class="bg-brand-green/10 text-brand-green font-display font-bold px-3.5 py-2 rounded-2xl text-xs sm:text-sm border-2 border-brand-green/20">
+                Mulok BTQ
+            </span>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-3xl mx-auto w-full flex-1 flex flex-col justify-center my-auto">
+
+        <!-- 1. HALAMAN LOGIN SISWA -->
+        <section id="loginScreen" class="bg-white rounded-3xl p-6 sm:p-10 shadow-xl border-4 border-white transition-all duration-300">
+            <div class="text-center mb-8">
+                <div class="inline-flex bg-brand-green/10 p-3 rounded-full mb-3 text-brand-green">
+                    <i data-lucide="user-check" class="w-8 h-8"></i>
+                </div>
+                <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-800">Selamat Datang Siswa SMP Darun Najah!</h2>
+                <p class="text-slate-500 text-sm mt-1">Lengkapi data diri di bawah ini untuk memulai Ulangan BTQ ✨</p>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-5">
+                <div>
+                    <label class="block font-display text-slate-700 text-sm font-bold mb-2">Nama Lengkap Siswa</label>
+                    <div class="relative">
+                        <i data-lucide="smile" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
+                        <input type="text" id="inputName" required placeholder="Masukkan Nama Lengkap" 
+                            class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border-2 border-slate-200 rounded-2xl focus:outline-none focus:border-brand-blue font-medium text-slate-800">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-display text-slate-700 text-sm font-bold mb-2">Pilih Kelas</label>
+                        <div class="relative">
+                            <i data-lucide="school" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
+                            <select id="inputClass" required class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border-2 border-slate-200 rounded-2xl focus:outline-none focus:border-brand-blue font-medium text-slate-800 appearance-none">
+                                <option value="7" selected>Kelas 7 (Default)</option>
+                                <option value="8">Kelas 8</option>
+                                <option value="9">Kelas 9</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-display text-slate-700 text-sm font-bold mb-2">Nomor Absen BTQ</label>
+                        <div class="relative">
+                            <i data-lucide="hash" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
+                            <input type="number" id="inputAbsent" min="1" max="100" required placeholder="Contoh: 15" 
+                                class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border-2 border-slate-200 rounded-2xl focus:outline-none focus:border-brand-blue font-medium text-slate-800">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full mt-6 bg-brand-green hover:bg-emerald-600 text-white font-display font-bold text-lg py-4 rounded-2xl shadow-lg shadow-green-100 bouncy flex items-center justify-center space-x-2">
+                    <span>Mulai Kerjakan Soal BTQ</span>
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+            </form>
+        </section>
+
+        <!-- 2. HALAMAN KUIS -->
+        <section id="quizScreen" class="hidden bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-4 border-white transition-all duration-300">
+            <!-- Top Bar -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 mb-6 border-b-2 border-slate-100 gap-3">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-brand-blue/10 p-2.5 rounded-2xl text-brand-blue">
+                        <i data-lucide="book-open" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 id="displayStudentInfo" class="font-display font-bold text-slate-800 text-base">Siswa</h3>
+                        <p class="text-xs font-semibold text-brand-purple">Mulok Baca Tulis Al-Qur'an (BTQ)</p>
+                    </div>
+                </div>
+                <div class="w-full sm:w-auto flex items-center space-x-3">
+                    <div class="flex-1 sm:w-36 bg-slate-100 h-3 rounded-full overflow-hidden">
+                        <div id="progressBar" class="bg-brand-yellow h-full w-0 transition-all duration-300 rounded-full"></div>
+                    </div>
+                    <span id="questionProgressText" class="font-display text-sm font-bold text-slate-600 min-w-[60px] text-right">1 / 25</span>
+                </div>
+            </div>
+
+            <!-- Navigasi Soal -->
+            <div class="mb-6">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 font-display">Navigasi Soal:</p>
+                <div id="numberGrid" class="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto p-1"></div>
+            </div>
+
+            <!-- Area Soal -->
+            <div class="mb-8">
+                <div class="bg-slate-50 p-5 rounded-2xl border-2 border-slate-100 mb-5">
+                    <div class="flex justify-between items-center mb-2">
+                        <span id="questionCategory" class="inline-block px-3 py-1 bg-brand-blue/10 text-brand-blue font-display font-bold text-xs rounded-lg">BTQ</span>
+                        <span id="questionTypeBadge" class="inline-block px-3 py-1 bg-brand-pink/10 text-brand-pink font-display font-bold text-xs rounded-lg">Pilihan Ganda</span>
+                    </div>
+                    <h2 id="questionText" class="text-lg sm:text-xl font-bold text-slate-800 leading-relaxed">
+                        Teks Soal...
+                    </h2>
+                </div>
+
+                <!-- Container Opsi Jawaban / Input Isian -->
+                <div id="optionsContainer" class="space-y-3"></div>
+            </div>
+
+            <!-- Tombol Navigasi -->
+            <div class="flex justify-between items-center pt-4 border-t-2 border-slate-100">
+                <button id="prevBtn" onclick="navigateQuestion(-1)" class="px-5 py-3 rounded-2xl border-2 border-slate-200 font-display font-bold text-slate-600 hover:bg-slate-100 bouncy flex items-center space-x-2">
+                    <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                    <span>Kembali</span>
+                </button>
+                <button id="nextBtn" onclick="navigateQuestion(1)" class="px-6 py-3 bg-brand-blue hover:bg-blue-600 text-white font-display font-bold rounded-2xl shadow-md shadow-blue-200 bouncy flex items-center space-x-2">
+                    <span>Selanjutnya</span>
+                    <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                </button>
+                <button id="submitBtn" onclick="finishQuiz()" class="hidden px-6 py-3 bg-brand-green hover:bg-green-600 text-white font-display font-bold rounded-2xl shadow-md shadow-green-200 bouncy flex items-center space-x-2">
+                    <span>Kirim Jawaban</span>
+                    <i data-lucide="send" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- 3. HALAMAN HASIL -->
+        <section id="resultScreen" class="hidden bg-white rounded-3xl p-6 sm:p-10 shadow-xl border-4 border-white transition-all duration-300 text-center">
+            <div id="badgeContainer" class="inline-flex p-4 rounded-full mb-3">
+                <i id="resultIcon" data-lucide="trophy" class="w-12 h-12"></i>
+            </div>
+            
+            <h2 id="resultTitle" class="font-display text-2xl sm:text-3xl font-bold text-slate-800">Hasil Ulangan BTQ</h2>
+            <p id="resultSubtitle" class="text-slate-500 text-sm mt-1">SMP Darun Najah</p>
+
+            <div class="my-6 p-6 bg-slate-50 rounded-3xl border-2 border-slate-100 max-w-sm mx-auto">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest font-display">Skor Akhir</span>
+                <div class="font-display text-5xl sm:text-6xl font-extrabold text-slate-800 my-2">
+                    <span id="finalScore">0</span><span class="text-2xl text-slate-400">/100</span>
+                </div>
+                <div id="statusBadge" class="inline-block px-4 py-1.5 rounded-full text-xs font-display font-bold">
+                    Status
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 max-w-sm mx-auto mb-8">
+                <div class="bg-green-50 p-4 rounded-2xl border-2 border-green-100 flex items-center justify-center space-x-3">
+                    <i data-lucide="check-circle-2" class="w-6 h-6 text-brand-green"></i>
+                    <div class="text-left">
+                        <p class="text-xs text-slate-500 font-semibold">Benar</p>
+                        <p id="correctCount" class="font-display text-lg font-bold text-slate-800">0 Soal</p>
+                    </div>
+                </div>
+                <div class="bg-rose-50 p-4 rounded-2xl border-2 border-rose-100 flex items-center justify-center space-x-3">
+                    <i data-lucide="x-circle" class="w-6 h-6 text-rose-500"></i>
+                    <div class="text-left">
+                        <p class="text-xs text-slate-500 font-semibold">Salah</p>
+                        <p id="wrongCount" class="font-display text-lg font-bold text-slate-800">0 Soal</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-left mb-8">
+                <h3 class="font-display text-lg font-bold text-slate-800 mb-4 flex items-center space-x-2">
+                    <i data-lucide="file-text" class="w-5 h-5 text-brand-purple"></i>
+                    <span>Pembahasan & Kunci Jawaban:</span>
+                </h3>
+                <div id="reviewContainer" class="space-y-4 max-h-96 overflow-y-auto pr-2"></div>
+            </div>
+
+            <div class="flex justify-center items-center gap-3 border-t-2 border-slate-100 pt-6">
+                <button onclick="restartQuiz()" class="px-8 py-3.5 bg-brand-yellow hover:bg-amber-500 text-slate-900 font-display font-bold rounded-2xl shadow-md bouncy flex items-center space-x-2">
+                    <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+                    <span>Ulangi Ujian</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- 4. DASHBOARD GURU (RAHASIA - PIN: 0829) -->
+        <section id="teacherDashboard" class="hidden bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-4 border-white transition-all duration-300">
+            <div class="flex justify-between items-center pb-4 mb-6 border-b-2 border-slate-100">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-brand-purple p-3 rounded-2xl text-white">
+                        <i data-lucide="shield-check" class="w-7 h-7"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-display text-xl font-bold text-slate-800">Dashboard Guru BTQ</h2>
+                        <p class="text-xs font-semibold text-slate-400">Pengelolaan Kuis & Nilai Siswa</p>
+                    </div>
+                </div>
+                <button onclick="logoutTeacher()" class="px-4 py-2 bg-rose-100 hover:bg-rose-200 text-rose-700 rounded-xl font-display font-bold text-xs flex items-center space-x-1">
+                    <i data-lucide="log-out" class="w-4 h-4"></i>
+                    <span>Keluar</span>
+                </button>
+            </div>
+
+            <!-- Tab Navigation Guru -->
+            <div class="flex space-x-2 mb-6 border-b-2 border-slate-100 pb-2">
+                <button id="tabResultsBtn" onclick="switchTeacherTab('results')" class="px-4 py-2 rounded-xl font-display font-bold text-sm bg-brand-purple text-white">Rekap Nilai Siswa</button>
+                <button id="tabManageBtn" onclick="switchTeacherTab('manage')" class="px-4 py-2 rounded-xl font-display font-bold text-sm bg-slate-100 text-slate-600 hover:bg-slate-200">Kelola Soal</button>
+                <button id="tabSettingsBtn" onclick="switchTeacherTab('settings')" class="px-4 py-2 rounded-xl font-display font-bold text-sm bg-slate-100 text-slate-600 hover:bg-slate-200">Logo Sekolah</button>
+            </div>
+
+            <!-- TAB 1: REKAP NILAI -->
+            <div id="teacherTabResults">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-display font-bold text-slate-700">Daftar Hasil Pengerjaan Siswa:</h3>
+                    <button onclick="clearStudentResults()" class="text-xs text-rose-500 hover:underline font-bold">Hapus Rekap</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-slate-100 font-display text-slate-600 border-b-2 border-slate-200">
+                                <th class="p-3">Waktu</th>
+                                <th class="p-3">Nama Siswa</th>
+                                <th class="p-3">Kelas</th>
+                                <th class="p-3">Absen BTQ</th>
+                                <th class="p-3">Skor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentResultsTableBody">
+                            <tr><td colspan="5" class="p-4 text-center text-slate-400">Belum ada data pengerjaan siswa.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB 2: KELOLA SOAL -->
+            <div id="teacherTabManage" class="hidden space-y-6">
+                <div class="bg-slate-50 p-4 rounded-2xl border-2 border-slate-100">
+                    <h4 class="font-display font-bold text-slate-800 mb-3">Tambah Soal Baru:</h4>
+                    <form onsubmit="addNewQuestion(event)" class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 mb-1">Tipe Soal</label>
+                            <select id="newType" onchange="toggleTypeFields()" class="w-full p-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold">
+                                <option value="mc">Pilihan Ganda (A, B, C, D)</option>
+                                <option value="essay">Isian Singkat</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 mb-1">Pertanyaan / Teks Soal</label>
+                            <input type="text" id="newQuestion" required placeholder="Masukkan pertanyaan..." class="w-full p-2.5 bg-white border border-slate-200 rounded-xl text-sm">
+                        </div>
+
+                        <div id="mcOptionsGroup" class="space-y-2">
+                            <label class="block text-xs font-bold text-slate-600">Pilihan Jawabannya & Kunci</label>
+                            <input type="text" id="optA" placeholder="Pilihan A" class="w-full p-2 bg-white border border-slate-200 rounded-xl text-xs">
+                            <input type="text" id="optB" placeholder="Pilihan B" class="w-full p-2 bg-white border border-slate-200 rounded-xl text-xs">
+                            <input type="text" id="optC" placeholder="Pilihan C" class="w-full p-2 bg-white border border-slate-200 rounded-xl text-xs">
+                            <input type="text" id="optD" placeholder="Pilihan D" class="w-full p-2 bg-white border border-slate-200 rounded-xl text-xs">
+                            <select id="mcCorrect" class="w-full p-2 bg-white border border-slate-200 rounded-xl text-xs font-bold text-brand-green">
+                                <option value="0">Kunci Jawaban: A</option>
+                                <option value="1">Kunci Jawaban: B</option>
+                                <option value="2">Kunci Jawaban: C</option>
+                                <option value="3">Kunci Jawaban: D</option>
+                            </select>
+                        </div>
+
+                        <div id="essayCorrectGroup" class="hidden">
+                            <label class="block text-xs font-bold text-slate-600 mb-1">Kunci Jawaban Isian Singkat</label>
+                            <input type="text" id="essayCorrect" placeholder="Ketik kata kunci jawaban benar" class="w-full p-2.5 bg-white border border-slate-200 rounded-xl text-sm">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 mb-1">Penjelasan / Pembahasan</label>
+                            <input type="text" id="newExplanation" placeholder="Penjelasan singkat" class="w-full p-2.5 bg-white border border-slate-200 rounded-xl text-sm">
+                        </div>
+
+                        <button type="submit" class="w-full py-3 bg-brand-purple text-white font-display font-bold text-sm rounded-xl">
+                            Simpan Soal
+                        </button>
+                    </form>
+                </div>
+
+                <div>
+                    <h4 class="font-display font-bold text-slate-800 mb-3">Daftar Soal Saat Ini (<span id="totalQuestionsCount">0</span> Soal):</h4>
+                    <div id="questionsList" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
+                </div>
+            </div>
+
+            <!-- TAB 3: SETTING LOGO -->
+            <div id="teacherTabSettings" class="hidden">
+                <div class="bg-slate-50 p-5 rounded-2xl border-2 border-slate-100 space-y-4">
+                    <h4 class="font-display font-bold text-slate-800">Ubah Logo SMP Darun Najah:</h4>
+                    <p class="text-xs text-slate-500">Tempelkan URL link gambar logo sekolah Anda di bawah ini:</p>
+                    <input type="url" id="logoUrlInput" placeholder="https://domain.com/logo-smp.png" class="w-full p-3 bg-white border border-slate-200 rounded-xl text-sm">
+                    <button onclick="saveLogoUrl()" class="px-6 py-2.5 bg-brand-blue text-white font-display font-bold text-sm rounded-xl">Simpan Logo</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL POPUP RAHASIA GURU -->
+    <div id="teacherPinModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-xs w-full shadow-2xl text-center border-4 border-white">
+            <div class="bg-brand-purple/10 p-3 rounded-full inline-block text-brand-purple mb-3">
+                <i data-lucide="lock" class="w-8 h-8"></i>
+            </div>
+            <h3 class="font-display font-bold text-lg text-slate-800 mb-1">Akses Khusus Guru</h3>
+            <p class="text-xs text-slate-400 mb-4">Masukkan Kode PIN Guru untuk masuk</p>
+            <input type="password" id="teacherPinInput" maxlength="6" placeholder="PIN Guru" class="w-full text-center text-xl font-bold tracking-widest p-3 bg-slate-50 border-2 border-slate-200 rounded-2xl mb-4 focus:outline-none focus:border-brand-purple">
+            <div class="flex space-x-2">
+                <button onclick="closeTeacherModal()" class="w-1/2 py-2.5 border-2 border-slate-200 rounded-xl font-display font-bold text-xs text-slate-600">Batal</button>
+                <button onclick="verifyTeacherPin()" class="w-1/2 py-2.5 bg-brand-purple text-white rounded-xl font-display font-bold text-xs">Masuk</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="max-w-4xl mx-auto w-full text-center mt-6 text-xs text-slate-400 font-semibold">
+        <p>© SMP Darun Najah • Media Ulangan Harian Mulok BTQ</p>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // DATA DEFAULT 25 SOAL BTQ (15 PILIHAN GANDA + 10 ISIAN)
+        const defaultQuestions = [
+            // --- 15 PILIHAN GANDA ---
+            { type: 'mc', category: "Mulok BTQ", question: "Apabila ada Nun Sukun (نْ) bertemu huruf Ba (ب), maka hukum bacaannya adalah...", options: ["Izhar Halqi", "Idgham Bighunnah", "Iqlab", "Ikhfa Haqiqi"], correct: 2, explanation: "Iqlab terjadi jika Nun Sukun/Tanwin bertemu huruf Ba (ب)." },
+            { type: 'mc', category: "Mulok BTQ", question: "Jumlah huruf Izhar Halqi dalam ilmu tajwid ada...", options: ["4 huruf", "6 huruf", "15 huruf", "2 huruf"], correct: 1, explanation: "Huruf Izhar Halqi ada 6: ء, هـ, ع, ح, غ, خ." },
+            { type: 'mc', category: "Mulok BTQ", question: "Huruf Idgham Bilaghunnah terdiri dari dua huruf, yaitu...", options: ["Lam (ل) dan Ra (ر)", "Ya (ي) dan Nun (ن)", "Mim (م) dan Wau (و)", "Ba (ب) dan Ta (ت)"], correct: 0, explanation: "Idgham Bilaghunnah hurufnya Lam (ل) dan Ra (ر)." },
+            { type: 'mc', category: "Mulok BTQ", question: "Membunyikan huruf Nun Sukun/Tanwin dengan samar-samar disertai dengung dinamakan...", options: ["Izhar", "Iqlab", "Ikhfa", "Qalqalah"], correct: 2, explanation: "Ikhfa secara bahasa artinya menyamarkan/menyembunyikan." },
+            { type: 'mc', category: "Mulok BTQ", question: "Huruf-huruf Idgham Bighunnah terkumpul dalam kata...", options: ["Yarmaluna", "Yanmu (ي - ن - م - و)", "Kutubu Jaddin", "Izhar"], correct: 1, explanation: "Huruf Idgham Bighunnah disingkat YANMU (ي, ن, م, و)." },
+            { type: 'mc', category: "Mulok BTQ", question: "Apabila Mim Sukun (مْ) bertemu dengan huruf Mim (م), hukum bacaannya adalah...", options: ["Ikhfa Syafawi", "Idgham Mimi / Mutamatsilain", "Izhar Syafawi", "Iqlab"], correct: 1, explanation: "Mim Sukun ketemu Mim dinamakan Idgham Mimi." },
+            { type: 'mc', category: "Mulok BTQ", question: "Berikut ini yang termasuk huruf Qalqalah adalah...", options: ["ق - ط - ب - ج - د", "ء - هـ - ع - ح", "ي - ن - م - و", "ل - ر"], correct: 0, explanation: "Huruf Qalqalah disingkat 'Baju Di Toko' (ب ج د ط ق)." },
+            { type: 'mc', category: "Mulok BTQ", question: "Lafazh 'Al-Qamariyah' dibaca dengan jelas karena terdapat hukum...", options: ["Izhar Qamariyah", "Idgham Syamsiyah", "Ikhfa", "Iqlab"], correct: 0, explanation: "Alif Lam Qamariyah dibaca secara jelas." },
+            { type: 'mc', category: "Mulok BTQ", question: "Apabila Alif Lam (ال) bertemu dengan huruf Sin (س), maka hukumnya adalah...", options: ["Al-Qamariyah", "Al-Syamsiyah", "Izhar", "Iqlab"], correct: 1, explanation: "Huruf Sin termasuk ke dalam huruf Syamsiyah." },
+            { type: 'mc', category: "Mulok BTQ", question: "Panjang bacaan Mad Thabi'i adalah...", options: ["1 Alif (2 Harakat)", "2 Alif (4 Harakat)", "3 Alif (6 Harakat)", "5 Harakat"], correct: 0, explanation: "Mad Thabi'i dibaca sepanjang 1 alif atau 2 harakat." },
+            { type: 'mc', category: "Mulok BTQ", question: "Huruf Mad Thabi'i ada 3, yaitu...", options: ["Alif, Wawu, Ya", "Ba, Ta, Tsa", "Jim, Ha, Kho", "Sin, Syin, Shod"], correct: 0, explanation: "Huruf Mad yaitu Alif (ا), Wawu (و), dan Ya (ي)." },
+            { type: 'mc', category: "Mulok BTQ", question: "Tanda baca mati/tidak berharakat dalam Bahasa Arab disebut...", options: ["Fathah", "Kasrah", "Sukun", "Tasydid"], correct: 2, explanation: "Sukun adalah tanda mati." },
+            { type: 'mc', category: "Mulok BTQ", question: "Tanda baca rangkap ganda yang menghasilkan bunyi 'an, in, un' disebut...", options: ["Sukun", "Tanwin", "Mad", "Waqaf"], correct: 1, explanation: "Tanwin terdiri dari fathatain, kasratain, dan dhammatain." },
+            { type: 'mc', category: "Mulok BTQ", question: "Tanda berhenti dalam membaca Al-Qur'an dinamakan...", options: ["Waqaf", "Washal", "Mad", "Ghunnah"], correct: 0, explanation: "Waqaf berarti berhenti." },
+            { type: 'mc', category: "Mulok BTQ", question: "Membaca Al-Qur'an sesuai dengan kaidah hukum bacaan yang benar disebut ilmu...", options: ["Fiqih", "Tajwid", "Tauhid", "Sejarah"], correct: 1, explanation: "Ilmu Tajwid mempelajari tata cara membaca Al-Qur'an secara benar." },
+
+            // --- 10 ISIAN SINGKAT ---
+            { type: 'essay', category: "Mulok BTQ", question: "Sebutkan nama hukum bacaan tajwid yang artinya 'Jelas atau Terang'!", correctAnswer: "Izhar", explanation: "Izhar secara bahasa artinya jelas." },
+            { type: 'essay', category: "Mulok BTQ", question: "Apa nama hukum bacaan Mim Sukun (مْ) bertemu dengan huruf Ba (ب)?", correctAnswer: "Ikhfa Syafawi", explanation: "Mim sukun ketemu Ba dinamakan Ikhfa Syafawi." },
+            { type: 'essay', category: "Mulok BTQ", question: "Berapakah jumlah huruf Qalqalah?", correctAnswer: "5", explanation: "Huruf qalqalah ada 5 (ق, ط, ب, ج, د)." },
+            { type: 'essay', category: "Mulok BTQ", question: "Tuliskan nama kitab suci umat Islam yang dipelajari dalam mata pelajaran BTQ!", correctAnswer: "Al-Qur'an", explanation: "Al-Qur'an adalah kitab suci umat Islam." },
+            { type: 'essay', category: "Mulok BTQ", question: "Sebutkan nama hukum bacaan memantul pada huruf tajwid!", correctAnswer: "Qalqalah", explanation: "Qalqalah artinya memantul." },
+            { type: 'essay', category: "Mulok BTQ", question: "Tanda baca penekanan atau huruf ganda dalam Arab disebut...", correctAnswer: "Tasydid", explanation: "Tasydid/Syaddah menandakan huruf ganda." },
+            { type: 'essay', category: "Mulok BTQ", question: "Lawan dari kata Waqaf (berhenti) yang artinya terus membaca adalah...", correctAnswer: "Washal", explanation: "Washal berarti menyambung/terus." },
+            { type: 'essay', category: "Mulok BTQ", question: "Berapakah jumlah huruf Ikhfa Haqiqi?", correctAnswer: "15", explanation: "Huruf Ikhfa Haqiqi berjumlah 15 huruf." },
+            { type: 'essay', category: "Mulok BTQ", question: "Surah pertama dalam urutan Al-Qur'an adalah surah...", correctAnswer: "Al-Fatihah", explanation: "Al-Fatihah adalah surah pembuka." },
+            { type: 'essay', category: "Mulok BTQ", question: "Tuliskan nama tempat keluarnya huruf-huruf hijaiyah dalam ilmu tajwid!", correctAnswer: "Makhorijul Huruf", explanation: "Makhorijul huruf adalah tempat keluarnya huruf." }
+        ];
+
+        // STATE APLIKASI
+        let quizQuestions = JSON.parse(localStorage.getItem('dn_quiz_questions')) || defaultQuestions;
+        let studentResults = JSON.parse(localStorage.getItem('dn_student_results')) || [];
+        let studentData = { name: '', class: '7', absent: '' };
+        let currentQuestionIndex = 0;
+        let userAnswers = {};
+        let clickCount = 0;
+        let clickTimer = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCustomLogo();
+            lucide.createIcons();
+        });
+
+        // KODE KLIK RAHASIA GURU (3x KLIK HEADER)
+        function handleSecretClick() {
+            clickCount++;
+            if (clickCount === 1) {
+                clickTimer = setTimeout(() => { clickCount = 0; }, 1000);
+            } else if (clickCount >= 3) {
+                clearTimeout(clickTimer);
+                clickCount = 0;
+                openTeacherModal();
+            }
+        }
+
+        function openTeacherModal() {
+            document.getElementById('teacherPinModal').classList.remove('hidden');
+            document.getElementById('teacherPinInput').value = '';
+            document.getElementById('teacherPinInput').focus();
+        }
+
+        function closeTeacherModal() {
+            document.getElementById('teacherPinModal').classList.add('hidden');
+        }
+
+        function verifyTeacherPin() {
+            const pin = document.getElementById('teacherPinInput').value.trim();
+            if (pin === '0829') {
+                closeTeacherModal();
+                showScreen('teacherDashboard');
+                renderTeacherDashboard();
+            } else {
+                alert("PIN Guru Salah!");
+            }
+        }
+
+        // LOGIN SISWA
+        function handleLogin(e) {
+            e.preventDefault();
+            studentData.name = document.getElementById('inputName').value.trim();
+            studentData.class = document.getElementById('inputClass').value;
+            studentData.absent = document.getElementById('inputAbsent').value;
+
+            if (!studentData.name || !studentData.absent) {
+                alert("Silakan lengkapi nama dan absen!");
+                return;
+            }
+
+            document.getElementById('displayStudentInfo').innerText = `${studentData.name} (Kelas ${studentData.class} / Absen ${studentData.absent})`;
+            showScreen('quizScreen');
+            renderQuizScreen();
+        }
+
+        function showScreen(screenId) {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('quizScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('teacherDashboard').classList.add('hidden');
+
+            document.getElementById(screenId).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // KUIS DISPLAY
+        function renderQuizScreen() {
+            const currentQ = quizQuestions[currentQuestionIndex];
+
+            document.getElementById('questionProgressText').innerText = `${currentQuestionIndex + 1} / ${quizQuestions.length}`;
+            const progressPercent = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
+            document.getElementById('progressBar').style.width = `${progressPercent}%`;
+
+            document.getElementById('questionCategory').innerText = currentQ.category || "BTQ";
+            document.getElementById('questionTypeBadge').innerText = currentQ.type === 'essay' ? 'Isian Singkat' : 'Pilihan Ganda';
+            document.getElementById('questionText').innerText = `${currentQuestionIndex + 1}. ${currentQ.question}`;
+
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+
+            if (currentQ.type === 'mc') {
+                const optionLabels = ['A', 'B', 'C', 'D'];
+                currentQ.options.forEach((opt, idx) => {
+                    const isSelected = userAnswers[currentQuestionIndex] === idx;
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.onclick = () => selectMcOption(idx);
+                    btn.className = `w-full p-4 rounded-2xl border-2 text-left font-medium transition-all duration-200 flex items-center justify-between bouncy ${
+                        isSelected ? 'border-brand-blue bg-blue-50 text-brand-blue shadow-md' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
+                    }`;
+
+                    btn.innerHTML = `
+                        <div class="flex items-center space-x-3">
+                            <span class="w-8 h-8 rounded-xl font-display font-bold flex items-center justify-center text-sm ${
+                                isSelected ? 'bg-brand-blue text-white' : 'bg-slate-100 text-slate-500'
+                            }">${optionLabels[idx]}</span>
+                            <span class="text-sm sm:text-base font-semibold">${opt}</span>
+                        </div>
+                        ${isSelected ? '<i data-lucide="check-circle-2" class="w-5 h-5 text-brand-blue"></i>' : ''}
+                    `;
+                    optionsContainer.appendChild(btn);
+                });
+            } else {
+                const currentAns = userAnswers[currentQuestionIndex] || '';
+                optionsContainer.innerHTML = `
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-2 font-display">Tulis Jawaban Singkat Kamu:</label>
+                        <input type="text" id="essayInput" value="${currentAns}" oninput="saveEssayAnswer(this.value)" 
+                            placeholder="Ketik jawaban di sini..." 
+                            class="w-full p-4 bg-slate-50 border-2 border-slate-200 rounded-2xl focus:outline-none focus:border-brand-blue font-semibold text-slate-800">
+                    </div>
+                `;
+            }
+
+            renderNumberGrid();
+
+            document.getElementById('prevBtn').style.visibility = currentQuestionIndex === 0 ? 'hidden' : 'visible';
+            if (currentQuestionIndex === quizQuestions.length - 1) {
+                document.getElementById('nextBtn').classList.add('hidden');
+                document.getElementById('submitBtn').classList.remove('hidden');
+            } else {
+                document.getElementById('nextBtn').classList.remove('hidden');
+                document.getElementById('submitBtn').classList.add('hidden');
+            }
+
+            lucide.createIcons();
+        }
+
+        function renderNumberGrid() {
+            const grid = document.getElementById('numberGrid');
+            grid.innerHTML = '';
+            quizQuestions.forEach((_, idx) => {
+                const isAnswered = userAnswers.hasOwnProperty(idx) && userAnswers[idx] !== '';
+                const isCurrent = idx === currentQuestionIndex;
+
+                let btnClass = "w-8 h-8 rounded-lg font-display font-bold text-xs transition-all flex items-center justify-center ";
+                if (isCurrent) {
+                    btnClass += "bg-brand-purple text-white ring-2 ring-purple-300 scale-105";
+                } else if (isAnswered) {
+                    btnClass += "bg-green-100 text-brand-green border border-green-300";
+                } else {
+                    btnClass += "bg-slate-100 text-slate-500 hover:bg-slate-200";
+                }
+
+                const btn = document.createElement('button');
+                btn.className = btnClass;
+                btn.innerText = idx + 1;
+                btn.onclick = () => {
+                    currentQuestionIndex = idx;
+                    renderQuizScreen();
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        function selectMcOption(index) {
+            userAnswers[currentQuestionIndex] = index;
+            renderQuizScreen();
+        }
+
+        function saveEssayAnswer(val) {
+            userAnswers[currentQuestionIndex] = val;
+            renderNumberGrid();
+        }
+
+        function navigateQuestion(step) {
+            currentQuestionIndex += step;
+            renderQuizScreen();
+        }
+
+        // HASIL & KIRIM EMAIL
+        function calculateScore() {
+            let correct = 0;
+            quizQuestions.forEach((q, idx) => {
+                const ans = userAnswers[idx];
+                if (q.type === 'mc') {
+                    if (ans === q.correct) correct++;
+                } else {
+                    if (ans && ans.toString().trim().toLowerCase() === q.correctAnswer.trim().toLowerCase()) {
+                        correct++;
+                    }
+                }
+            });
+            return {
+                score: Math.round((correct / quizQuestions.length) * 100),
+                correct,
+                wrong: quizQuestions.length - correct
+            };
+        }
+
+        function finishQuiz() {
+            const answeredCount = Object.keys(userAnswers).filter(k => userAnswers[k] !== '').length;
+            if (answeredCount < quizQuestions.length) {
+                if (!confirm(`Baru dijawab ${answeredCount} dari ${quizQuestions.length} soal. Yakin ingin mengumpulkan?`)) {
+                    return;
+                }
+            }
+
+            const { score, correct, wrong } = calculateScore();
+
+            const resultEntry = {
+                timestamp: new Date().toLocaleString('id-ID'),
+                name: studentData.name,
+                class: studentData.class,
+                absent: studentData.absent,
+                score: score
+            };
+            studentResults.push(resultEntry);
+            localStorage.setItem('dn_student_results', JSON.stringify(studentResults));
+
+            // Kirim Hasil Otomatis ke Gmail achmadnasrudien82@gmail.com
+            fetch("https://formspree.io/f/achmadnasrudien82@gmail.com", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    _subject: `[KUIS BTQ] ${resultEntry.name} - Kelas ${resultEntry.class} (Nilai: ${score})`,
+                    Nama: resultEntry.name,
+                    Kelas: resultEntry.class,
+                    NoAbsen: resultEntry.absent,
+                    Nilai: score,
+                    Waktu: resultEntry.timestamp
+                })
+            }).catch(() => {});
+
+            renderResults(score, correct, wrong);
+            showScreen('resultScreen');
+        }
+
+        function renderResults(score, correct, wrong) {
+            document.getElementById('finalScore').innerText = score;
+            document.getElementById('correctCount').innerText = `${correct} Soal`;
+            document.getElementById('wrongCount').innerText = `${wrong} Soal`;
+
+            const badgeContainer = document.getElementById('badgeContainer');
+            const resultIcon = document.getElementById('resultIcon');
+            const statusBadge = document.getElementById('statusBadge');
+
+            if (score >= 70) {
+                badgeContainer.className = "inline-flex p-4 rounded-full mb-3 bg-green-100 text-brand-green";
+                resultIcon.setAttribute('data-lucide', 'trophy');
+                statusBadge.className = "inline-block px-4 py-1.5 rounded-full text-xs font-display font-bold bg-green-100 text-green-700";
+                statusBadge.innerText = "LULUS KKM 🌟";
+            } else {
+                badgeContainer.className = "inline-flex p-4 rounded-full mb-3 bg-amber-100 text-brand-yellow";
+                resultIcon.setAttribute('data-lucide', 'award');
+                statusBadge.className = "inline-block px-4 py-1.5 rounded-full text-xs font-display font-bold bg-amber-100 text-amber-700";
+                statusBadge.innerText = "BELAJAR LAGI YA 📚";
+            }
+
+            const reviewContainer = document.getElementById('reviewContainer');
+            reviewContainer.innerHTML = '';
+            const optionLabels = ['A', 'B', 'C', 'D'];
+
+            quizQuestions.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                let isCorrect = false;
+                let userDisplay = '';
+                let keyDisplay = '';
+
+                if (q.type === 'mc') {
+                    isCorrect = userAns === q.correct;
+                    userDisplay = userAns !== undefined ? `${optionLabels[userAns]}. ${q.options[userAns]}` : 'Tidak dijawab';
+                    keyDisplay = `${optionLabels[q.correct]}. ${q.options[q.correct]}`;
+                } else {
+                    isCorrect = userAns && userAns.toString().trim().toLowerCase() === q.correctAnswer.trim().toLowerCase();
+                    userDisplay = userAns || 'Tidak dijawab';
+                    keyDisplay = q.correctAnswer;
+                }
+
+                const item = document.createElement('div');
+                item.className = `p-4 rounded-2xl border-2 ${isCorrect ? 'bg-green-50/50 border-green-200' : 'bg-rose-50/50 border-rose-200'}`;
+
+                item.innerHTML = `
+                    <div class="flex items-start justify-between gap-2 mb-2">
+                        <span class="font-display font-bold text-slate-800 text-sm">${idx + 1}. ${q.question}</span>
+                        <span class="px-2 py-0.5 rounded-lg text-xs font-display font-bold ${isCorrect ? 'bg-green-200 text-green-800' : 'bg-rose-200 text-rose-800'}">
+                            ${isCorrect ? 'Benar' : 'Salah'}
+                        </span>
+                    </div>
+                    <div class="text-xs space-y-1 font-semibold text-slate-600 mb-2">
+                        <p>Jawaban Kamu: <span class="${isCorrect ? 'text-green-600' : 'text-rose-600'} font-bold">${userDisplay}</span></p>
+                        ${!isCorrect ? `<p>Kunci Jawaban: <span class="text-green-600 font-bold">${keyDisplay}</span></p>` : ''}
+                    </div>
+                    <div class="bg-white/80 p-2 rounded-xl text-xs text-slate-500 border border-slate-200/60">
+                        <span class="font-bold text-slate-700">Penjelasan:</span> ${q.explanation}
+                    </div>
+                `;
+                reviewContainer.appendChild(item);
+            });
+
+            lucide.createIcons();
+        }
+
+        function restartQuiz() {
+            userAnswers = {};
+            currentQuestionIndex = 0;
+            showScreen('loginScreen');
+        }
+
+        // LOGIC DASHBOARD GURU
+        function logoutTeacher() {
+            showScreen('loginScreen');
+        }
+
+        function switchTeacherTab(tabName) {
+            document.getElementById('teacherTabResults').classList.add('hidden');
+            document.getElementById('teacherTabManage').classList.add('hidden');
+            document.getElementById('teacherTabSettings').classList.add('hidden');
+
+            document.getElementById('tabResultsBtn').className = "px-4 py-2 rounded-xl font-display font-bold text-sm bg-slate-100 text-slate-600";
+            document.getElementById('tabManageBtn').className = "px-4 py-2 rounded-xl font-display font-bold text-sm bg-slate-100 text-slate-600";
+            document.getElementById('tabSettingsBtn').className = "px-4 py-2 rounded-xl font-display font-bold text-sm bg-slate-100 text-slate-600";
+
+            if (tabName === 'results') {
+                document.getElementById('teacherTabResults').classList.remove('hidden');
+                document.getElementById('tabResultsBtn').className = "px-4 py-2 rounded-xl font-display font-bold text-sm bg-brand-purple text-white";
+            } else if (tabName === 'manage') {
+                document.getElementById('teacherTabManage').classList.remove('hidden');
+                document.getElementById('tabManageBtn').className = "px-4 py-2 rounded-xl font-display font-bold text-sm bg-brand-purple text-white";
+            } else if (tabName === 'settings') {
+                document.getElementById('teacherTabSettings').classList.remove('hidden');
+                document.getElementById('tabSettingsBtn').className = "px-4 py-2 rounded-xl font-display font-bold text-sm bg-brand-purple text-white";
+            }
+        }
+
+        function renderTeacherDashboard() {
+            const tbody = document.getElementById('studentResultsTableBody');
+            tbody.innerHTML = '';
+            if (studentResults.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Belum ada data pengerjaan.</td></tr>`;
+            } else {
+                studentResults.forEach(res => {
+                    const tr = document.createElement('tr');
+                    tr.className = "border-b border-slate-100 hover:bg-slate-50";
+                    tr.innerHTML = `
+                        <td class="p-3 text-xs text-slate-400">${res.timestamp}</td>
+                        <td class="p-3 font-bold text-slate-800">${res.name}</td>
+                        <td class="p-3 text-slate-600">Kelas ${res.class}</td>
+                        <td class="p-3 text-slate-600">${res.absent}</td>
+                        <td class="p-3 font-bold ${res.score >= 70 ? 'text-green-600' : 'text-rose-600'}">${res.score}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            document.getElementById('totalQuestionsCount').innerText = quizQuestions.length;
+            const qList = document.getElementById('questionsList');
+            qList.innerHTML = '';
+            quizQuestions.forEach((q, idx) => {
+                const div = document.createElement('div');
+                div.className = "p-2.5 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center text-xs";
+                div.innerHTML = `
+                    <div class="truncate mr-2">
+                        <span class="font-bold text-brand-purple">[${q.type === 'mc' ? 'PG' : 'Isian'}]</span>
+                        <span class="font-bold text-slate-800">${idx + 1}. ${q.question}</span>
+                    </div>
+                    <button onclick="deleteQuestion(${idx})" class="text-rose-500 font-bold hover:underline shrink-0">Hapus</button>
+                `;
+                qList.appendChild(div);
+            });
+        }
+
+        function clearStudentResults() {
+            if (confirm("Hapus seluruh data rekap nilai siswa?")) {
+                studentResults = [];
+                localStorage.removeItem('dn_student_results');
+                renderTeacherDashboard();
+            }
+        }
+
+        function toggleTypeFields() {
+            const type = document.getElementById('newType').value;
+            if (type === 'mc') {
+                document.getElementById('mcOptionsGroup').classList.remove('hidden');
+                document.getElementById('essayCorrectGroup').classList.add('hidden');
+            } else {
+                document.getElementById('mcOptionsGroup').classList.add('hidden');
+                document.getElementById('essayCorrectGroup').classList.remove('hidden');
+            }
+        }
+
+        function addNewQuestion(e) {
+            e.preventDefault();
+            const type = document.getElementById('newType').value;
+            const question = document.getElementById('newQuestion').value.trim();
+            const explanation = document.getElementById('newExplanation').value.trim();
+
+            let newQ = {
+                type,
+                category: "Mulok BTQ",
+                question,
+                explanation: explanation || "Tidak ada penjelasan."
+            };
+
+            if (type === 'mc') {
+                newQ.options = [
+                    document.getElementById('optA').value.trim() || 'A',
+                    document.getElementById('optB').value.trim() || 'B',
+                    document.getElementById('optC').value.trim() || 'C',
+                    document.getElementById('optD').value.trim() || 'D'
+                ];
+                newQ.correct = parseInt(document.getElementById('mcCorrect').value);
+            } else {
+                newQ.correctAnswer = document.getElementById('essayCorrect').value.trim() || 'Jawaban Benar';
+            }
+
+            quizQuestions.push(newQ);
+            localStorage.setItem('dn_quiz_questions', JSON.stringify(quizQuestions));
+            alert("Soal berhasil ditambahkan!");
+            renderTeacherDashboard();
+        }
+
+        function deleteQuestion(index) {
+            if (confirm("Hapus soal ini?")) {
+                quizQuestions.splice(index, 1);
+                localStorage.setItem('dn_quiz_questions', JSON.stringify(quizQuestions));
+                renderTeacherDashboard();
+            }
+        }
+
+        function saveLogoUrl() {
+            const url = document.getElementById('logoUrlInput').value.trim();
+            if (url) {
+                localStorage.setItem('dn_school_logo', url);
+                loadCustomLogo();
+                alert("Logo sekolah berhasil diperbarui!");
+            }
+        }
+
+        function loadCustomLogo() {
+            const savedLogo = localStorage.getItem('dn_school_logo');
+            if (savedLogo) {
+                document.getElementById('schoolLogoContainer').innerHTML = `<img src="${savedLogo}" class="w-full h-full object-contain" alt="Logo SMP Darun Najah">`;
+            }
+        }
+    </script>
+</body>
+</html>
